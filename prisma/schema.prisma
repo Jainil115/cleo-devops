@@ -1,0 +1,311 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+  MANAGER
+  AUDITOR
+}
+
+enum RiskTypes {
+  FINANCIAL
+  OPERATIONAL
+  TECHNICAL
+  HR
+  EXTERNAL
+}
+
+enum MeasureLevels {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum EscalationMatrixTypes {
+  OPERATIONAL
+  FINANCIAL
+  TECHNICAL
+}
+
+
+
+model User {
+  id String @id @default(uuid())
+  userId String @unique
+  name String
+  imageUrl String @db.Text
+  email String @db.Text
+  role UserRole? @default(CLIENT)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  projects Project[]
+  members Member[]
+  notifications Notification[]
+
+  managedProjects Project[] @relation("ProjectManager")
+  auditedProjects Project[] @relation("Auditor")
+}
+
+
+
+
+
+model Project {
+  id String @id @default(uuid())
+  name String
+  description String @db.Text @default("Lorem ipsum")
+  scope String @db.Text @default("Lorem ipsum")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  members Member[]
+  audits Audit[]
+  resources Resource[]
+  updates Update[]
+  feedbacks Feedback[]
+  moms Mom[]
+  phases Phase[]
+  teams Team[]
+  notifications Notification[]
+  stakeholders Stakeholder[]
+  risks Risk[]
+  escalationMatrix Escalation_matrix[]
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  projectManagerId String?
+  projectManager User? @relation("ProjectManager", fields: [projectManagerId], references: [id], onDelete: SetNull)
+
+  auditorId String?
+  auditor User? @relation("Auditor", fields: [auditorId], references: [id], onDelete: SetNull)
+}
+
+
+
+
+
+model Member {
+  id String @id @default(uuid())
+  role UserRole @default(CLIENT)
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+
+
+
+
+model Audit {
+  id String @id @default(uuid())
+  
+  date DateTime @default(now())
+  body String @db.Text
+  isEdited Boolean @default(false)
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+}
+
+
+
+
+model Resource {
+  id String @id @default(uuid())
+  
+  role String
+  name String
+  startDate DateTime @default(now())
+  endDate DateTime @default(now())
+  comment String @db.Text
+  isEdited Boolean @default(false)
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+}
+
+
+
+
+
+model Feedback {
+  id String @id @default(uuid())
+  
+  type String
+  date DateTime @default(now())
+  body String @db.Text
+  action String @db.Text
+  closureDate DateTime @default(now())
+  isEdited Boolean @default(false)
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+}
+
+
+model Update {
+  id String @id @default(uuid())
+  
+  date DateTime @default(now())
+  body String @db.Text
+  isEdited Boolean @default(false)
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+}
+
+
+
+
+
+model Mom {
+  id String @id @default(uuid())
+  
+  date DateTime @default(now())
+  duration Int 
+  link String @db.Text
+  comments String @db.Text
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+
+
+
+model Phase {
+  id String @id @default(uuid())
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  content Phase_content[]
+
+  createdAt DateTime @default(now())
+}
+
+
+model Phase_content {
+  id String @id @default(uuid())
+
+  resources Int
+  role String
+  availability Int
+  duration Int
+
+  phaseId String
+  phase Phase @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id String @id @default(uuid())
+
+  text String?
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  isRead Boolean @default(false)
+}
+
+
+model Stakeholder {
+  id String @id @default(uuid())
+
+  title String
+  name String
+  contact String
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model Risk {
+  id String @id @default(uuid())
+
+  type RiskTypes
+  description String @db.Text
+  severity MeasureLevels
+  impact MeasureLevels
+  remedialSteps String @db.Text
+  status String @db.Text
+  closureDate DateTime @default(now())
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model Team {
+  id String @id @default(uuid())
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  content Team_content[]
+
+  createdAt DateTime @default(now())
+}
+
+
+model Team_content {
+  id String @id @default(uuid())
+
+  resources Int
+  role String
+  availability Int
+  duration Int
+
+  teamId String
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model Escalation_matrix {
+  id String @id @default(uuid())
+
+  type EscalationMatrixTypes
+  level Int
+  name String
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}

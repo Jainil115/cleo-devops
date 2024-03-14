@@ -1,0 +1,51 @@
+services:
+  postgresdb:
+    image: postgres
+    container_name: posgresdb-container
+    restart: unless-stopped
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - nextinternalnet
+    volumes:
+      - $HOME/postgresdatabase:/var/lib/postgresql/data
+
+  nextapp:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: jainilp12/nextapp:2.0
+    expose:
+      - ${SERVER_PORT}
+    ports:
+      - 80:${SERVER_PORT}
+    
+
+    environment:
+      DATABASE_URL: ${REMOTE_DATABASE_URL}
+      AUTH0_SECRET: ${AUTH0_SECRET}
+      AUTH0_BASE_URL: ${AUTH0_BASE_URL}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+      AUTH0_CLIENT_ID: ${AUTH0_CLIENT_ID}
+      AUTH0_CLIENT_SECRET: ${AUTH0_CLIENT_SECRET}
+
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+    networks:
+      - nextinternalnet
+
+networks:
+  nextinternalnet:
+    driver: bridge

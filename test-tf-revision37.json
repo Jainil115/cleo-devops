@@ -1,0 +1,50 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:171358186705:task-definition/test-tf:37",
+    "containerDefinitions": [
+        {
+            "name": "nextapp",
+            "image": "171358186705.dkr.ecr.ap-south-1.amazonaws.com/nextapp:4.0",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "systemControls": []
+        }
+    ],
+    "family": "test-tf",
+    "executionRoleArn": "arn:aws:iam::171358186705:role/ecsTaskExecutionRole",
+    "networkMode": "bridge",
+    "revision": 37,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2"
+    ],
+    "cpu": "300",
+    "memory": "300",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2024-03-14T07:40:10.040Z",
+    "registeredBy": "arn:aws:iam::171358186705:user/terraform-create-user",
+    "tags": []
+}

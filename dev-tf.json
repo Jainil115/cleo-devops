@@ -1,0 +1,50 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:171358186705:task-definition/dev-tf:16",
+    "containerDefinitions": [
+        {
+            "name": "nextapp",
+            "image": "171358186705.dkr.ecr.ap-south-1.amazonaws.com/nextapp:e0398de01cbc872f2163d99bd62af8720b3da5b3",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "hostPort": 0,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "systemControls": []
+        }
+    ],
+    "family": "dev-tf",
+    "executionRoleArn": "arn:aws:iam::171358186705:role/ecsTaskExecutionRole",
+    "networkMode": "bridge",
+    "revision": 16,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EXTERNAL",
+        "EC2"
+    ],
+    "cpu": "300",
+    "memory": "300",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2024-03-15T08:48:32.832Z",
+    "registeredBy": "arn:aws:iam::171358186705:user/terraform-create-user",
+    "tags": []
+}

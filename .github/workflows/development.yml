@@ -40,6 +40,7 @@ jobs:
         with:
           repository: "Jainil115/${{ env.INFRA_REPO }}"
           ref: "dev"
+          token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Terraform setup
         uses: hashicorp/setup-terraform@v3

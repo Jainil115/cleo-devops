@@ -9,9 +9,9 @@ on:
 env:
   AWS_REGION: ap-south-1
   ECR_REPOSITORY: "nextapp"
-  ECS_SERVICE: "test-ecs-service"
-  ECS_CLUSTER: "test-ecs-cluster"
-  ECS_TASK_DEFINITION: test-tf-revision37.json
+  ECS_SERVICE: "dev-ecs-service"
+  ECS_CLUSTER: "dev-ecs-cluster"
+  ECS_TASK_DEFINITION: dev-tf.json
   CONTAINER_NAME: nextapp
   # POSTGRES_USER: ${{secrets.POSTGRES_USERNAME}}
   # POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
@@ -51,6 +51,7 @@ jobs:
         run: |
           terraform init
           echo "AUTH0_BASE_URL=$(terraform output lb_dns_name)" >> $GITHUB_ENV
+          echo $(terraform output lb_dns_name)
 
       - name: Github Checkout
         uses: actions/checkout@v3

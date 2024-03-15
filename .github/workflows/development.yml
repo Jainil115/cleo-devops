@@ -50,7 +50,7 @@ jobs:
       - name: Terraform Output
         run: |
           terraform init
-          echo "AUTH0_BASE_URL=$(terraform output lb_dns_name)" >> $GITHUB_ENV
+          echo "AUTH0_BASE_URL=http://$(terraform output lb_dns_name)" >> $GITHUB_ENV
           echo $(terraform output lb_dns_name)
 
       - name: Github Checkout
@@ -78,6 +78,7 @@ jobs:
         run: |
           chmod +x ./set_env.sh
           ./set_env.sh
+          echo "${{env.AUTH0_BASE_URL}}"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT

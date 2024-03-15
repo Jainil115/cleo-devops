@@ -28,6 +28,7 @@ env:
   AUTH0_CLIENT_SECRET: ${{secrets.AUTH0_CLIENT_SECRET}}
   # LOCAL_DATABASE_URL: ${{secrets.LOCAL_DATABASE_URL}}
   DATABASE_URL: ${{secrets.DATABASE_URL}}
+  INFRA_REPO: "cleo-env"
 
 jobs:
   build:
@@ -37,8 +38,8 @@ jobs:
       - name: Infra Checkout
         uses: actions/checkout@v4
         with:
-          repository: "Jainil115/${{ secrets.INFRA_REPO }}"
-          ref:
+          repository: "Jainil115/${{ env.INFRA_REPO }}"
+          ref: "dev"
 
       - name: Terraform setup
         uses: hashicorp/setup-terraform@v3

@@ -1,6 +1,6 @@
 # Related Repositories:
 
-## Terraform for setting up different modules: https://github.com/Jainil115/cleo-env (Private)
+## Terraform for setting up different evironment: https://github.com/Jainil115/cleo-env (Private)
 
 ## Security Group Module: https://github.com/Jainil115/terraform-aws-sg
 

@@ -11,7 +11,7 @@ const ManagersPage = async () => {
     return (  
         <div className="p-5 h-full w-full">
             <EmptyState 
-                title="Staging Work underway Edited by Jainil"
+                title="Staging Work underway Edited by Jainil Staging Final"
             />
         </div>
     );

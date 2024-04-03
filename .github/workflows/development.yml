@@ -50,7 +50,7 @@ jobs:
       - name: Terraform Output
         run: |
           terraform init
-          echo "AUTH0_BASE_URL=http://$(terraform output lb_dns_name | sed -e 's/^"//' -e 's/"$//')" >> $GITHUB_ENV
+          echo "AUTH0_BASE_URL=https://dev.jainilpatel.tech" >> $GITHUB_ENV
           echo $(terraform output lb_dns_name)
 
       - name: Github Checkout
